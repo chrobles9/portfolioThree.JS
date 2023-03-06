@@ -4,6 +4,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 // Global variables
 let scene, camera, renderer, controls;
+// Rotating shapes
 let sceneObjects = [];
 
 // Initiate Scene
@@ -17,18 +18,28 @@ function initScene() {
   );
   renderer = new THREE.WebGLRenderer({
     canvas: document.querySelector("#background"),
-    antialias: true,
+    // antialias: true,
   });
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
+
+  camera.position.z = 30;
+  camera.position.x = -3;
+
   renderer.render(scene, camera);
 
   createShapes();
+  document.body.onscroll = moveCamera;
+
   addLighting();
   addTextures();
   Array(200).fill().forEach(createStar);
+
+  moveCamera();
+
   animate();
+
   // onWindowResize();
   // window.addEventListener("resize", onWindowResize, false);
 }
@@ -46,7 +57,43 @@ function createShapes() {
     sceneObjects.push(torus);
   }
 
+  // Cube with Head image
+  function createHeadCube() {
+    const headTexture = new THREE.TextureLoader().load("./headLogo.png");
+    const head = new THREE.Mesh(
+      new THREE.BoxGeometry(5, 5, 5),
+      new THREE.MeshBasicMaterial({ map: headTexture })
+    );
+
+    head.position.z = -10;
+    head.position.x = 1;
+    scene.add(head);
+    sceneObjects.push(head);
+  }
+
+  // Moon
+  function createMoon() {
+    const moonTexture = new THREE.TextureLoader().load("./moonTexture.jpg");
+    const normalTexture = new THREE.TextureLoader().load("./normalMap.png");
+
+    const moon = new THREE.Mesh(
+      new THREE.SphereGeometry(3, 32, 32),
+      new THREE.MeshStandardMaterial({
+        map: moonTexture,
+        normalMap: normalTexture,
+      })
+    );
+    moon.position.z = 16;
+    moon.position.x = -7;
+    // moon.position.y = -10;
+
+    scene.add(moon);
+    sceneObjects.push(moon);
+  }
+
   createTorus();
+  createHeadCube();
+  createMoon();
 }
 
 function addLighting() {
@@ -59,13 +106,11 @@ function addLighting() {
   scene.add(pointLight, ambientLight);
 
   // Visual Light assistance tool
-  const lightHelper = new THREE.PointLightHelper(pointLight);
-  const gridHelper = new THREE.GridHelper(200, 50);
-  scene.add(lightHelper, gridHelper);
+  // const lightHelper = new THREE.PointLightHelper(pointLight);
+  // const gridHelper = new THREE.GridHelper(200, 50);
+  // scene.add(lightHelper, gridHelper);
 
-  controls = new OrbitControls(camera, renderer.domElement);
-
-  camera.position.setZ(30);
+  // controls = new OrbitControls(camera, renderer.domElement);
 }
 
 function addTextures() {
@@ -77,11 +122,15 @@ function addTextures() {
 function animate() {
   requestAnimationFrame(animate);
   // Rotates each object the same
-  for (let object of sceneObjects) {
-    object.rotation.x += 0.01;
-    object.rotation.y += 0.005;
-    object.rotation.z += 0.01;
-  }
+  // for (let object of sceneObjects) {
+  //   object.rotation.x += 0.01;
+  //   object.rotation.y += 0.005;
+  //   object.rotation.z += 0.01;
+  // }
+
+  sceneObjects[2].rotation.x += 0.01;
+  sceneObjects[2].rotation.y += 0.005;
+  sceneObjects[2].rotation.z += 0.01;
   renderer.render(scene, camera);
 
   controls.update();
@@ -99,6 +148,21 @@ function createStar() {
 
   star.position.set(x, y, z);
   scene.add(star);
+}
+
+function moveCamera() {
+  const t = document.body.getBoundingClientRect().top;
+  // Moon
+  // sceneObjects[2].rotation.x += 0.05;
+  // sceneObjects[2].rotation.y += 0.075;
+  // sceneObjects[2].rotation.z += 0.05;
+  // Head Cube
+  sceneObjects[1].rotation.y += 0.01;
+  sceneObjects[1].rotation.z += 0.01;
+
+  camera.position.z = t * -0.02;
+  camera.position.x = t * -0.0002;
+  camera.position.y = t * -0.0002;
 }
 
 // function onWindowResize() {

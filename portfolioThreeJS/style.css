@@ -4,3 +4,8 @@ canvas {
   left: 0;
   /* background-color: black; */
 }
+
+main {
+  position: absolute;
+  color: white;
+}
