@@ -1,6 +1,6 @@
 import "./style.css";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+// import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 // Global variables
 let scene, camera, renderer, controls;
@@ -84,7 +84,8 @@ function createShapes() {
       })
     );
     moon.position.z = 16;
-    moon.position.x = -7;
+    // moon.position.x = -7;
+    moon.position.x = -4;
     // moon.position.y = -10;
 
     scene.add(moon);
