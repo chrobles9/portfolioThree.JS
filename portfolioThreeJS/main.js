@@ -35,11 +35,8 @@ function initScene() {
   addLighting();
   addTextures();
   Array(200).fill().forEach(createStar);
-
   moveCamera();
-
   animate();
-
   // onWindowResize();
   // window.addEventListener("resize", onWindowResize, false);
 }
@@ -83,18 +80,38 @@ function createShapes() {
         normalMap: normalTexture,
       })
     );
-    moon.position.z = 16;
-    // moon.position.x = -7;
-    moon.position.x = -4;
-    // moon.position.y = -10;
+    moon.position.z = 19;
+    moon.position.x = -7;
+    moon.position.y = -10;
 
     scene.add(moon);
     sceneObjects.push(moon);
   }
 
+  function createMars() {
+    const marsTexture = new THREE.TextureLoader().load("./marsTexture.jpg");
+    const normalTexture = new THREE.TextureLoader().load("./normalMap.png");
+
+    const mars = new THREE.Mesh(
+      new THREE.SphereGeometry(4, 20, 20),
+      new THREE.MeshStandardMaterial({
+        map: marsTexture,
+        normalMap: normalTexture,
+      })
+    );
+
+    mars.position.z = 45;
+    mars.position.x = 5;
+    mars.position.y = 3;
+
+    scene.add(mars);
+    sceneObjects.push(mars);
+  }
+
   createTorus();
   createHeadCube();
   createMoon();
+  createMars();
 }
 
 function addLighting() {
@@ -122,19 +139,17 @@ function addTextures() {
 
 function animate() {
   requestAnimationFrame(animate);
-  // Rotates each object the same
-  // for (let object of sceneObjects) {
-  //   object.rotation.x += 0.01;
-  //   object.rotation.y += 0.005;
-  //   object.rotation.z += 0.01;
-  // }
+  // Moon rotations
+  sceneObjects[2].rotation.x += 0.001;
+  sceneObjects[2].rotation.y += 0.001;
+  sceneObjects[2].rotation.z += 0.001;
+  // Mars Rotations
+  sceneObjects[3].rotation.x += 0.001;
+  sceneObjects[3].rotation.y += 0.005;
+  sceneObjects[3].rotation.z += 0.001;
 
-  sceneObjects[2].rotation.x += 0.01;
-  sceneObjects[2].rotation.y += 0.005;
-  sceneObjects[2].rotation.z += 0.01;
   renderer.render(scene, camera);
-
-  controls.update();
+  // controls.update();
 }
 
 function createStar() {
@@ -153,10 +168,6 @@ function createStar() {
 
 function moveCamera() {
   const t = document.body.getBoundingClientRect().top;
-  // Moon
-  // sceneObjects[2].rotation.x += 0.05;
-  // sceneObjects[2].rotation.y += 0.075;
-  // sceneObjects[2].rotation.z += 0.05;
   // Head Cube
   sceneObjects[1].rotation.y += 0.01;
   sceneObjects[1].rotation.z += 0.01;

@@ -2,10 +2,14 @@ canvas {
   position: fixed;
   top: 0;
   left: 0;
-  /* background-color: black; */
 }
 
 main {
   position: absolute;
   color: white;
+}
+
+/* Added height to each section to test animation scroll  */
+section {
+  height: 900px;
 }
